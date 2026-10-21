@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathe-Entdecker: Flächen & Volumen verstehen</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f8fafc;
+    }
+    h1, h2, h3, .brand-font {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    /* Smooth transitions */
+    .tab-btn {
+      transition: all 0.25s ease;
+    }
+    .custom-range {
+      accent-color: #3b82f6;
+    }
+    .water-wave {
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.7) 0%, rgba(14, 165, 233, 0.9) 100%);
+      transition: height 0.4s ease;
+    }
+    /* Grid animation */
+    .grid-cell {
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+    .grid-cell:hover {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col bg-slate-50">
+
+  <!-- Header / Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+            <i class="fa-solid fa-shapes text-xl sm:text-2xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-none">Mathe-Entdecker</h1>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium">Flächen & Volumen anschaulich begreifen</p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs (Desktop) -->
+        <nav class="hidden md:flex gap-1.5 p-1.5 bg-slate-100 rounded-2xl border border-slate-200/80">
+          <button onclick="switchTab('tab-area')" id="nav-tab-area" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-blue-600 bg-white shadow-sm">
+            <i class="fa-solid fa-vector-square"></i> 1. Fläche (2D)
+          </button>
+          <button onclick="switchTab('tab-volume')" id="nav-tab-volume" class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 text-slate-600 hover:text-slate-900">
+            <i class="fa-solid fa-cube"></i> 2. Volumen (3D)
+          </button>
+          <button onclick="switchTab('tab-units')" id="nav-tab-units" class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 text-slate-600 hover:text-slate-900">
+            <i class="fa-solid fa-stairs"></i> 3. Einheiten
+          </button>
+          <button onclick="switchTab('tab-liter')" id="nav-tab-liter" class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 text-slate-600 hover:text-slate-900">
+            <i class="fa-solid fa-bottle-water"></i> 4. Volumen & Liter
+          </button>
+          <button onclick="switchTab('tab-quiz')" id="nav-tab-quiz" class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 text-slate-600 hover:text-slate-900">
+            <i class="fa-solid fa-brain"></i> 5. Quiz & Üben
+          </button>
+        </nav>
+
+        <!-- Help / Quick Tip Badge -->
+        <div class="hidden lg:flex items-center gap-2 bg-amber-50 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-amber-200">
+          <i class="fa-regular fa-lightbulb text-amber-500"></i> Tipp: Probiere die Schieberegler aus!
+        </div>
+      </div>
+
+      <!-- Mobile Sub-navigation -->
+      <div class="flex md:hidden overflow-x-auto pb-2.5 pt-1 gap-2 no-scrollbar border-t border-slate-100">
+        <button onclick="switchTab('tab-area')" id="mob-tab-area" class="tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white">
+          <i class="fa-solid fa-vector-square mr-1"></i> Fläche (2D)
+        </button>
+        <button onclick="switchTab('tab-volume')" id="mob-tab-volume" class="tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+          <i class="fa-solid fa-cube mr-1"></i> Volumen (3D)
+        </button>
+        <button onclick="switchTab('tab-units')" id="mob-tab-units" class="tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+          <i class="fa-solid fa-stairs mr-1"></i> Einheiten
+        </button>
+        <button onclick="switchTab('tab-liter')" id="mob-tab-liter" class="tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+          <i class="fa-solid fa-bottle-water mr-1"></i> Liter
+        </button>
+        <button onclick="switchTab('tab-quiz')" id="mob-tab-quiz" class="tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+          <i class="fa-solid fa-brain mr-1"></i> Quiz
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: FLÄCHE VERSTEHEN (2D)               -->
+    <!-- ========================================== -->
+    <section id="tab-area" class="tab-content block space-y-6">
+      <!-- Title & Explanation Card -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold mb-3">
+            <i class="fa-solid fa-ruler-combined"></i> 2D Dimension: Länge × Breite
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Was bedeutet eigentlich Fläche?</h2>
+          <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
+            Eine Fläche ist der zweidimensionale Inhalt einer Figur. Stell dir vor, du legst kleine 
+            <strong>Einheitsquadrate</strong> (z.&thinsp;B. 1 cm × 1 cm = 1 cm²) aus. Die Anzahl aller Quadrate ist der Flächeninhalt!
+          </p>
+        </div>
+        <div class="absolute -right-6 -bottom-8 opacity-15 text-white pointer-events-none text-9xl">
+          <i class="fa-solid fa-border-all"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Controls Sidebar -->
+        <div class="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 class="font-bold text-slate-800 text-lg">Maße einstellen</h3>
+              <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-2 py-1 rounded-lg">Gitter 1 bis 10</span>
+            </div>
+
+            <!-- Length slider (a) -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label for="slider-area-w" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center text-xs">a</span>
+                  Länge (Spalten):
+                </label>
+                <span id="label-area-w" class="text-base font-extrabold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-100">5 cm</span>
+              </div>
+              <input type="range" id="slider-area-w" min="1" max="10" value="5" class="w-full h-2.5 bg-slate-200 rounded-lg cursor-pointer custom-range" oninput="updateAreaGrid()">
+            </div>
+
+            <!-- Width slider (b) -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label for="slider-area-h" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">b</span>
+                  Breite (Zeilen):
+                </label>
+                <span id="label-area-h" class="text-base font-extrabold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-100">4 cm</span>
+              </div>
+              <input type="range" id="slider-area-h" min="1" max="10" value="4" class="w-full h-2.5 bg-slate-200 rounded-lg cursor-pointer custom-range" oninput="updateAreaGrid()">
+            </div>
+
+            <!-- View Modes -->
+            <div class="pt-2 border-t border-slate-100">
+              <label class="text-xs uppercase font-bold text-slate-400 tracking-wider block mb-2">Anzeige-Modus</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="setAreaMode('formula')" id="btn-mode-formula" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-blue-500 bg-blue-50 text-blue-700 flex items-center justify-center gap-1.5 transition">
+                  <i class="fa-solid fa-calculator"></i> Formel-Blick
+                </button>
+                <button onclick="setAreaMode('count')" id="btn-mode-count" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 flex items-center justify-center gap-1.5 transition">
+                  <i class="fa-solid fa-hand-pointer"></i> Zähl-Modus
+                </button>
+              </div>
+              <p id="area-mode-hint" class="text-xs text-slate-500 mt-2">
+                Zeigt die Multiplikation: Zeilen × Spalten.
+              </p>
+            </div>
+
+            <!-- Formula Live Box -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-4 text-white text-center shadow-inner">
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block mb-1">Flächeninhalt A</span>
+              <div class="text-xl sm:text-2xl font-black text-amber-400 font-mono tracking-wide" id="area-formula-display">
+                5 cm × 4 cm = 20 cm²
+              </div>
+              <div class="text-xs text-slate-300 mt-1">
+                = <span id="area-total-count" class="font-bold text-white">20</span> Einheitsquadrate (je 1 cm²)
+              </div>
+            </div>
+          </div>
+
+          <!-- Real World Context Pill -->
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-3">
+            <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-lg"></i>
+            <div class="text-xs text-amber-900 leading-snug">
+              <strong>Alltag:</strong> Fliesenleger rechnen genauso! Ein Zimmer mit 5 m Länge und 4 m Breite braucht genau 20 Fliesen von je 1 m².
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Grid Visualizer -->
+        <div class="lg:col-span-8 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-3.5 h-3.5 bg-blue-500 rounded-sm"></span>
+              <span class="text-xs sm:text-sm font-semibold text-slate-600">1 Kästchen = 1 cm² (1 cm × 1 cm)</span>
+            </div>
+            <button onclick="resetAreaCount()" id="btn-reset-clicks" class="hidden text-xs text-blue-600 hover:text-blue-800 font-bold bg-blue-50 px-2.5 py-1 rounded-lg">
+              <i class="fa-solid fa-rotate-left mr-1"></i>Zähler zurücksetzen
+            </button>
+          </div>
+
+          <!-- Container for the 2D Grid -->
+          <div class="w-full overflow-auto p-4 flex items-center justify-center min-h-[380px] bg-slate-50/70 rounded-2xl border border-dashed border-slate-200">
+            <div id="grid-container" class="relative inline-block transition-all">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+
+          <!-- Interactive Examples Row -->
+          <div class="w-full mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button onclick="setAreaExample(3, 2, 'Smartphone-Bildschirm')" class="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-2xl text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">Smartphone</span>
+                <span class="text-[11px] text-slate-500">z.B. 3 × 2 = 6 cm²</span>
+              </div>
+            </button>
+
+            <button onclick="setAreaExample(6, 4, 'Schulheft DIN A5')" class="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-2xl text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">Schulheft</span>
+                <span class="text-[11px] text-slate-500">z.B. 6 × 4 = 24 cm²</span>
+              </div>
+            </button>
+
+            <button onclick="setAreaExample(10, 7, 'Klassenzimmer')" class="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-2xl text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-chalkboard-user"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">Klassenzimmer</span>
+                <span class="text-[11px] text-slate-500">10 × 7 = 70 m²</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: VOLUMEN VERSTEHEN (3D)              -->
+    <!-- ========================================== -->
+    <section id="tab-volume" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold mb-3">
+            <i class="fa-solid fa-cube"></i> 3D Dimension: Länge × Breite × Höhe
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Wie entsteht Rauminhalt (Volumen)?</h2>
+          <p class="text-teal-100 text-sm sm:text-base leading-relaxed">
+            Ein Quader entsteht, wenn man flache Schichten aus <strong>Einheitswürfeln (1 cm³)</strong> übereinanderstapelt. 
+            Erst berechnet man die <strong>Grundfläche G = a · b</strong> und multipliziert diese mit der <strong>Höhe h</strong>!
+          </p>
+        </div>
+        <div class="absolute -right-6 -bottom-8 opacity-15 text-white pointer-events-none text-9xl">
+          <i class="fa-solid fa-cubes"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 3D Controls -->
+        <div class="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between gap-6">
+          <div class="space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 class="font-bold text-slate-800 text-lg">Quader-Dimensionen</h3>
+              <span class="text-xs bg-teal-50 text-teal-700 font-semibold px-2 py-1 rounded-lg">1 bis 6 Würfel</span>
+            </div>
+
+            <!-- Length (l) -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-6 h-6 rounded bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-mono">a</span>
+                  Länge:
+                </span>
+                <span id="label-vol-l" class="text-sm font-black text-teal-600 bg-teal-50 px-2 py-0.5 rounded">4 cm</span>
+              </div>
+              <input type="range" id="slider-vol-l" min="1" max="6" value="4" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer custom-range" oninput="updateVolumeScene()">
+            </div>
+
+            <!-- Width (w) -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-6 h-6 rounded bg-cyan-100 text-cyan-700 flex items-center justify-center text-xs font-mono">b</span>
+                  Breite:
+                </span>
+                <span id="label-vol-w" class="text-sm font-black text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded">3 cm</span>
+              </div>
+              <input type="range" id="slider-vol-w" min="1" max="5" value="3" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer custom-range" oninput="updateVolumeScene()">
+            </div>
+
+            <!-- Height (h) -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-6 h-6 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-mono">h</span>
+                  Gesamthöhe:
+                </span>
+                <span id="label-vol-h" class="text-sm font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">3 cm</span>
+              </div>
+              <input type="range" id="slider-vol-h" min="1" max="4" value="3" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer custom-range" oninput="updateVolumeScene()">
+            </div>
+
+            <!-- Layer By Layer slider -->
+            <div class="p-3 bg-amber-50/80 rounded-2xl border border-amber-200">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                  <i class="fa-solid fa-layer-group text-amber-600"></i> Schichten aufbauen:
+                </span>
+                <span id="label-vol-layer" class="text-xs font-extrabold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">3 von 3</span>
+              </div>
+              <input type="range" id="slider-vol-layer" min="1" max="3" value="3" class="w-full h-2 bg-amber-200 rounded-lg cursor-pointer accent-amber-600" oninput="updateVolumeScene(false)">
+              <p class="text-[11px] text-amber-800 mt-1">Schiebe nach links, um die Schichten einzeln aufzudecken!</p>
+            </div>
+
+            <!-- Volume Calculations -->
+            <div class="bg-slate-900 rounded-2xl p-4 text-white shadow-inner space-y-2">
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">Grundfläche (1 Schicht):</span>
+                <div class="text-base font-bold text-teal-300 font-mono">
+                  G = <span id="vol-calc-base">4 × 3 = 12</span> cm²
+                </div>
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">Gesamtvolumen V:</span>
+                <div class="text-xl font-black text-amber-400 font-mono" id="vol-calc-total">
+                  12 cm² × 3 = 36 cm³
+                </div>
+                <div class="text-xs text-slate-400 mt-0.5">
+                  = <span id="vol-cube-count" class="text-white font-bold">36</span> kleine Einheitswürfel
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-100 rounded-2xl p-3 text-xs text-slate-600 flex items-center gap-2">
+            <i class="fa-solid fa-hand-pointer text-slate-400"></i>
+            Tipp: Du kannst den Quader im Bild drehen, indem du die Regler variierst.
+          </div>
+        </div>
+
+        <!-- 3D Canvas / Isometric View -->
+        <div class="lg:col-span-8 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col items-center">
+          <div class="w-full flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 bg-teal-500 rounded-sm"></span>
+              <span class="text-sm font-semibold text-slate-700">Isometrische 3D-Ansicht mit Schicht-Hervorhebung</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleWireframe()" id="btn-wireframe" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-xl font-bold transition">
+                <i class="fa-solid fa-border-none mr-1"></i> Gitter ein/aus
+              </button>
+            </div>
+          </div>
+
+          <div class="w-full relative flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 rounded-2xl border border-slate-200 overflow-hidden min-h-[380px] p-2">
+            <canvas id="canvas-isometric" width="600" height="420" class="max-w-full h-auto drop-shadow-md"></canvas>
+            
+            <div class="absolute bottom-3 left-4 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-600 shadow-sm flex items-center gap-2">
+              <span class="w-3 h-3 bg-amber-400 rounded-full inline-block"></span> 1 Würfel = 1 cm × 1 cm × 1 cm = <strong>1 cm³</strong>
+            </div>
+          </div>
+
+          <!-- Explanation of Schichten-Prinzip -->
+          <div class="w-full mt-4 bg-teal-50/60 border border-teal-200/70 rounded-2xl p-4">
+            <h4 class="text-sm font-bold text-teal-900 mb-1 flex items-center gap-2">
+              <i class="fa-solid fa-lightbulb text-teal-600"></i> Das Schichten-Prinzip (Grundfläche × Höhe):
+            </h4>
+            <p class="text-xs sm:text-sm text-teal-800 leading-relaxed">
+              Jede Schicht besteht aus genau <span id="explain-base-cubes" class="font-bold">12</span> Würfeln. 
+              Da wir <span id="explain-height-cubes" class="font-bold">3</span> Schichten übereinanderlegen, haben wir 
+              <strong>3 mal 12 = 36 Würfel</strong>. Deshalb lautet die Formel: <strong class="font-mono">Volumen = Grundfläche × Höhe</strong>!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: EINHEITEN UMRECHNEN                 -->
+    <!-- ========================================== -->
+    <section id="tab-units" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold mb-3">
+            <i class="fa-solid fa-stairs"></i> Umrechnungszahlen verstehen
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Warum mal 100 und mal 1.000?</h2>
+          <p class="text-indigo-100 text-sm sm:text-base leading-relaxed">
+            Die Einheitentreppe führt von der <strong>größten Einheit (links oben)</strong> zur <strong>kleinsten Einheit (rechts unten)</strong>.<br>
+            • Nach <strong>rechts (kleinere Einheit)</strong>: <strong>Multiplizieren (·)</strong><br>
+            • Nach <strong>links (größere Einheit)</strong>: <strong>Dividieren (:)</strong>
+          </p>
+        </div>
+        <div class="absolute -right-6 -bottom-8 opacity-15 text-white pointer-events-none text-9xl">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        </div>
+      </div>
+
+      <!-- Unit Selector (2D vs 3D) -->
+      <div class="flex justify-center">
+        <div class="bg-slate-200/80 p-1.5 rounded-2xl inline-flex gap-2 border border-slate-300/60 shadow-inner">
+          <button onclick="switchUnitType('area')" id="btn-unit-area" class="px-5 py-2 rounded-xl text-sm font-bold bg-white text-indigo-700 shadow-sm transition">
+            <i class="fa-solid fa-border-all mr-1.5"></i> Flächeneinheiten (Stufe: 100)
+          </button>
+          <button onclick="switchUnitType('volume')" id="btn-unit-vol" class="px-5 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 transition">
+            <i class="fa-solid fa-cubes mr-1.5"></i> Volumeneinheiten (Stufe: 1.000)
+          </button>
+        </div>
+      </div>
+
+      <!-- Graphical Steps Visualizer -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 mb-6 gap-2">
+          <h3 id="unit-stepper-title" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-stairs text-indigo-600"></i> Die Flächen-Treppe (Größte Einheit links → Kleinste Einheit rechts)
+          </h3>
+          <div class="flex items-center gap-3 text-xs font-bold">
+            <span class="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+              <i class="fa-solid fa-arrow-right"></i> nach rechts: Multiplizieren (·)
+            </span>
+            <span class="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+              <i class="fa-solid fa-arrow-left"></i> nach links: Dividieren (:)
+            </span>
+          </div>
+        </div>
+
+        <!-- Interactive Visual Steps Container -->
+        <div id="unit-steps-container" class="overflow-x-auto pb-4 pt-2">
+          <!-- Rendered dynamically for Area or Volume -->
+        </div>
+
+        <!-- Visual "Why 100?" or "Why 1000?" Graphic -->
+        <div id="unit-why-box" class="mt-8 bg-indigo-50/70 border border-indigo-200 rounded-2xl p-5 flex flex-col md:flex-row items-center gap-6">
+          <div class="w-40 h-40 bg-white rounded-2xl border-2 border-indigo-300 p-2 shadow-sm shrink-0 flex items-center justify-center relative">
+            <div id="mini-why-visual" class="w-full h-full relative"></div>
+          </div>
+          <div class="space-y-2">
+            <h4 id="why-title" class="font-bold text-indigo-900 text-base">Warum passen 100 mm² in 1 cm²?</h4>
+            <p id="why-desc" class="text-xs sm:text-sm text-indigo-800 leading-relaxed">
+              Ein Quadrat von <strong>1 cm Länge</strong> und <strong>1 cm Breite</strong> hat <strong>10 mm × 10 mm</strong> Kantenlänge. 
+              Zählt man die kleinen Millimeterquadrate, so sind es genau <strong>10 Reihen zu je 10 Quadraten = 100 mm²</strong>! 
+              Deshalb verschiebt sich das Komma bei Flächen um <strong>2 Stellen</strong> pro Stufe.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Calculator / Converter Machine -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-calculator text-indigo-600"></i> Interaktiver Einheiten-Umrechner
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <div class="md:col-span-4">
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Eingabewert</label>
+            <input type="number" id="convert-val" value="5" step="any" class="w-full px-4 py-3 rounded-2xl border border-slate-300 font-bold text-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500" oninput="calculateUnitConversion()">
+          </div>
+
+          <div class="md:col-span-3">
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Von Einheit</label>
+            <select id="convert-from" class="w-full px-4 py-3 rounded-2xl border border-slate-300 font-bold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="calculateUnitConversion()">
+              <!-- Options populated by JS -->
+            </select>
+          </div>
+
+          <div class="md:col-span-1 flex justify-center text-slate-400 text-2xl pt-4 md:pt-0">
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+
+          <div class="md:col-span-4">
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">In Einheit</label>
+            <select id="convert-to" class="w-full px-4 py-3 rounded-2xl border border-slate-300 font-bold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="calculateUnitConversion()">
+              <!-- Options populated by JS -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <div class="mt-6 bg-slate-900 rounded-2xl p-5 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Ergebnis der Umrechnung</span>
+            <div id="convert-result-text" class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">
+              5 dm² = 500 cm²
+            </div>
+          </div>
+          <div id="convert-step-explanation" class="text-xs sm:text-sm text-slate-300 bg-slate-800 px-4 py-2.5 rounded-xl border border-slate-700">
+            Rechnung: 5 × 100 = 500
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: VOLUMEN & LITER                    -->
+    <!-- ========================================== -->
+    <section id="tab-liter" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-sky-600 to-blue-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold mb-3">
+            <i class="fa-solid fa-droplet"></i> Flüssigkeiten & Hohlmaße
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Wie hängen dm³, cm³ und Liter zusammen?</h2>
+          <p class="text-sky-100 text-sm sm:text-base leading-relaxed">
+            Ein Würfel von <strong>10 cm × 10 cm × 10 cm</strong> hat genau <strong>1 dm³</strong> Rauminhalt. 
+            Füllt man ihn bis zum Rand mit Wasser, ist es genau <strong>1 Liter</strong> (1.000 Milliliter oder 1.000 cm³)!
+          </p>
+        </div>
+        <div class="absolute -right-6 -bottom-8 opacity-15 text-white pointer-events-none text-9xl">
+          <i class="fa-solid fa-bottle-water"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Tank Interactive Controls -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="font-bold text-slate-800 text-lg">Wasserstand im 1-Liter-Würfel</h3>
+            <p class="text-xs text-slate-500">Bewege den Schieberegler oder wähle typische Gefäße aus!</p>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                <i class="fa-solid fa-water text-sky-500"></i> Füllmenge:
+              </span>
+              <span id="label-tank-pct" class="text-base font-black text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-lg border border-sky-100">
+                500 ml
+              </span>
+            </div>
+            <input type="range" id="slider-tank" min="0" max="1000" step="50" value="500" class="w-full h-3 bg-slate-200 rounded-lg cursor-pointer accent-sky-500" oninput="updateTankFromSlider()">
+          </div>
+
+          <!-- Quick presets -->
+          <div>
+            <label class="text-xs uppercase font-bold text-slate-400 tracking-wider block mb-2">Typische Alltags-Mengen</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="fillPreset(150)" class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-mug-hot text-amber-600"></i> Tasse (150 ml)
+              </button>
+              <button onclick="fillPreset(250)" class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-glass-water text-blue-500"></i> Trinkglas (250 ml)
+              </button>
+              <button onclick="fillPreset(500)" class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-bottle-water text-emerald-500"></i> Trinkflasche (500 ml)
+              </button>
+              <button onclick="fillPreset(1000)" class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-box text-purple-500"></i> Milchtüte (1.000 ml = 1 l)
+              </button>
+            </div>
+          </div>
+
+          <!-- Live equivalence card -->
+          <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-3">
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Gleichwertige Einheiten</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                <span class="text-[10px] text-slate-400 uppercase font-bold block">Liter</span>
+                <span id="tank-liter" class="text-lg font-black text-amber-400 font-mono">0,5 Liter</span>
+              </div>
+              <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                <span class="text-[10px] text-slate-400 uppercase font-bold block">Dezimeter³</span>
+                <span id="tank-dm3" class="text-lg font-black text-amber-400 font-mono">0,5 dm³</span>
+              </div>
+              <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                <span class="text-[10px] text-slate-400 uppercase font-bold block">Milliliter</span>
+                <span id="tank-ml" class="text-lg font-black text-sky-400 font-mono">500 ml</span>
+              </div>
+              <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                <span class="text-[10px] text-slate-400 uppercase font-bold block">Zentimeter³</span>
+                <span id="tank-cm3" class="text-lg font-black text-sky-400 font-mono">500 cm³</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tank Visualization -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col items-center justify-between">
+          <div class="w-full flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+              <i class="fa-solid fa-cube text-sky-600"></i> Einheitswürfel 1 dm³ (10 cm × 10 cm × 10 cm)
+            </span>
+            <span class="text-xs bg-sky-50 text-sky-700 font-bold px-2.5 py-1 rounded-lg">Fassungsvermögen: 1 Liter</span>
+          </div>
+
+          <!-- Glass Cube Tank Container -->
+          <div class="w-full flex items-center justify-center py-6">
+            <div class="relative w-56 sm:w-64 h-72 border-4 border-slate-300 rounded-2xl bg-slate-50/60 overflow-hidden shadow-inner flex flex-col justify-end">
+              <!-- Scale markers -->
+              <div class="absolute inset-y-0 right-2 flex flex-col justify-between py-2 text-[10px] font-mono text-slate-400 select-none pointer-events-none">
+                <span>1000 ml (1 l / 1 dm³)</span>
+                <span>750 ml (¾ l)</span>
+                <span>500 ml (½ l)</span>
+                <span>250 ml (¼ l)</span>
+                <span>0 ml</span>
+              </div>
+
+              <!-- Water level element -->
+              <div id="tank-water" class="water-wave w-full relative flex items-start justify-center" style="height: 50%;">
+                <div class="w-full h-2 bg-sky-300/60 absolute top-0"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Learnings Card -->
+          <div class="w-full bg-sky-50 border border-sky-200 rounded-2xl p-4">
+            <h4 class="text-sm font-bold text-sky-900 mb-1 flex items-center gap-2">
+              <i class="fa-solid fa-circle-info text-sky-600"></i> Die goldene Brücke zwischen Raum & Flüssigkeit:
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-sky-900 mt-2">
+              <div class="bg-white/80 p-2.5 rounded-xl border border-sky-100">
+                <strong>1 dm³ = 1 Liter</strong><br>
+                (Ein Würfel mit 10 cm Kantenlänge)
+              </div>
+              <div class="bg-white/80 p-2.5 rounded-xl border border-sky-100">
+                <strong>1 cm³ = 1 Milliliter (ml)</strong><br>
+                (Ein kleiner Würfel mit 1 cm Kantenlänge)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: QUIZ & ÜBEN (ERWEITERTER BEREICH)   -->
+    <!-- ========================================== -->
+    <section id="tab-quiz" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold mb-3">
+            <i class="fa-solid fa-graduation-cap"></i> Interaktives Trainingslager
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Quiz & Übungsaufgaben</h2>
+          <p class="text-violet-100 text-sm sm:text-base leading-relaxed">
+            Teste dein Wissen über Flächen, Rauminhalte, Einheiten-Treppen und Liter! Löse abwechslungsreiche Aufgaben mit sofortiger Erklärung und Rechenweg.
+          </p>
+        </div>
+        <div class="absolute -right-6 -bottom-8 opacity-15 text-white pointer-events-none text-9xl">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex flex-wrap gap-2 items-center justify-start sm:justify-center bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+        <span class="text-xs font-bold text-slate-500 uppercase px-2 mr-1">Thema wählen:</span>
+        <button onclick="setQuizFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white transition">
+          Alle (15)
+        </button>
+        <button onclick="setQuizFilter('area')" id="filter-area" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Flächen (2D)
+        </button>
+        <button onclick="setQuizFilter('volume')" id="filter-volume" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Volumen (3D)
+        </button>
+        <button onclick="setQuizFilter('units')" id="filter-units" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Einheiten-Treppe
+        </button>
+        <button onclick="setQuizFilter('liter')" id="filter-liter" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Volumen & Liter
+        </button>
+        <button onclick="setQuizFilter('real')" id="filter-real" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Alltags-Aufgaben
+        </button>
+      </div>
+
+      <!-- Main Exercise Card -->
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div id="quiz-body" class="space-y-6">
+          <!-- Exercise Header -->
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span id="quiz-category-badge" class="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
+                Kategorie
+              </span>
+              <span id="quiz-type-badge" class="text-xs font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">
+                Multiple Choice
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="quiz-question-num" class="text-xs font-bold text-slate-500 font-mono">1 / 15</span>
+              <span id="quiz-score-display" class="text-xs font-extrabold bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">
+                0 Sterne
+              </span>
+            </div>
+          </div>
+
+          <!-- Question Display -->
+          <div class="py-2">
+            <h3 id="quiz-question-text" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+              Aufgabe lädt...
+            </h3>
+          </div>
+
+          <!-- Multiple-Choice Option Container -->
+          <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Numeric Answer Container -->
+          <div id="quiz-numeric-container" class="hidden space-y-3">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input type="text" id="quiz-num-input" placeholder="Antwort eingeben..." class="flex-1 px-4 py-3 rounded-2xl border-2 border-slate-200 font-bold text-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <button onclick="checkNumericAnswer()" id="quiz-btn-submit-numeric" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition shadow-sm">
+                Antwort prüfen
+              </button>
+            </div>
+            <p class="text-xs text-slate-400">Drücke einfach [Enter] zum Bestätigen deiner Eingabe.</p>
+          </div>
+
+          <!-- Feedback Box -->
+          <div id="quiz-feedback" class="hidden p-4 rounded-2xl border text-sm transition-all leading-relaxed">
+            <!-- Feedback HTML dynamically inserted -->
+          </div>
+
+          <!-- Next Button -->
+          <div class="pt-2 flex justify-end">
+            <button onclick="nextQuizQuestion()" id="quiz-next-btn" class="hidden px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition flex items-center gap-2">
+              Nächste Aufgabe <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="quiz-completed" class="hidden py-8 text-center space-y-5">
+          <div class="w-20 h-20 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-4xl mx-auto shadow-sm">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-slate-900 mb-1">Training abgeschlossen!</h3>
+            <p id="quiz-final-score-text" class="text-slate-600 text-sm max-w-md mx-auto">
+              Super durchgehalten!
+            </p>
+          </div>
+          <button onclick="restartQuiz()" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition inline-flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Bereich erneut üben
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC                                         -->
+  <!-- ======================================================== -->
+  <script>
+    /* ----------------------------------------------------
+       TAB NAVIGATION
+       ---------------------------------------------------- */
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(tabId);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update Desktop tabs
+      const tabs = ['tab-area', 'tab-volume', 'tab-units', 'tab-liter', 'tab-quiz'];
+      tabs.forEach(id => {
+        const btn = document.getElementById('nav-' + id);
+        const mobBtn = document.getElementById('mob-' + id);
+        if (id === tabId) {
+          if (btn) {
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-blue-600 bg-white shadow-sm";
+          }
+          if (mobBtn) {
+            mobBtn.className = "tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white";
+          }
+        } else {
+          if (btn) {
+            btn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 text-slate-600 hover:text-slate-900";
+          }
+          if (mobBtn) {
+            mobBtn.className = "tab-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700";
+          }
+        }
+      });
+
+      // Special triggers on tab switch
+      if (tabId === 'tab-volume') {
+        setTimeout(updateVolumeScene, 50);
+      } else if (tabId === 'tab-units') {
+        renderUnitSteps();
+      }
+    }
+
+    /* ----------------------------------------------------
+       MODULE 1: FLÄCHE VERSTEHEN (2D)
+       ---------------------------------------------------- */
+    let areaMode = 'formula'; // 'formula' or 'count'
+    let clickedSquares = new Set();
+
+    function setAreaMode(mode) {
+      areaMode = mode;
+      const fBtn = document.getElementById('btn-mode-formula');
+      const cBtn = document.getElementById('btn-mode-count');
+      const resetBtn = document.getElementById('btn-reset-clicks');
+      const hint = document.getElementById('area-mode-hint');
+
+      if (mode === 'formula') {
+        fBtn.className = "px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-blue-500 bg-blue-50 text-blue-700 flex items-center justify-center gap-1.5 transition";
+        cBtn.className = "px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 flex items-center justify-center gap-1.5 transition";
+        resetBtn.classList.add('hidden');
+        hint.textContent = "Zeigt die Multiplikation: Länge × Breite = Gesamtquadrate.";
+      } else {
+        cBtn.className = "px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-blue-500 bg-blue-50 text-blue-700 flex items-center justify-center gap-1.5 transition";
+        fBtn.className = "px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 flex items-center justify-center gap-1.5 transition";
+        resetBtn.classList.remove('hidden');
+        hint.textContent = "Klicke die Quadrate nacheinander an, um sie selbst durchzuzählen!";
+      }
+      clickedSquares.clear();
+      updateAreaGrid();
+    }
+
+    function resetAreaCount() {
+      clickedSquares.clear();
+      updateAreaGrid();
+    }
+
+    function toggleSquare(index) {
+      if (areaMode !== 'count') return;
+      if (clickedSquares.has(index)) {
+        clickedSquares.delete(index);
+      } else {
+        clickedSquares.add(index);
+      }
+      renderAreaCells();
+    }
+
+    function setAreaExample(w, h, name) {
+      document.getElementById('slider-area-w').value = w;
+      document.getElementById('slider-area-h').value = h;
+      updateAreaGrid();
+    }
+
+    function updateAreaGrid() {
+      const w = parseInt(document.getElementById('slider-area-w').value);
+      const h = parseInt(document.getElementById('slider-area-h').value);
+
+      document.getElementById('label-area-w').textContent = `${w} cm`;
+      document.getElementById('label-area-h').textContent = `${h} cm`;
+
+      const area = w * h;
+      document.getElementById('area-formula-display').textContent = `${w} cm × ${h} cm = ${area} cm²`;
+      document.getElementById('area-total-count').textContent = area;
+
+      renderAreaCells();
+    }
+
+    function renderAreaCells() {
+      const w = parseInt(document.getElementById('slider-area-w').value);
+      const h = parseInt(document.getElementById('slider-area-h').value);
+      const container = document.getElementById('grid-container');
+
+      // Grid dimension scaling
+      const cellSize = w > 7 || h > 7 ? 36 : 46;
+
+      let html = `<div style="display: grid; grid-template-columns: repeat(${w}, ${cellSize}px); grid-template-rows: repeat(${h}, ${cellSize}px); gap: 4px; padding: 12px; background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">`;
+
+      let count = 1;
+      for (let r = 0; r < h; r++) {
+        for (let c = 0; c < w; c++) {
+          const idx = `${r}-${c}`;
+          const isClicked = clickedSquares.has(idx);
+
+          let cellBg = "bg-blue-100 text-blue-800 border-blue-300";
+          let label = count;
+
+          if (areaMode === 'count') {
+            if (isClicked) {
+              cellBg = "bg-emerald-500 text-white font-extrabold border-emerald-600 scale-95 shadow-inner";
+              label = '<i class="fa-solid fa-check"></i>';
+            } else {
+              cellBg = "bg-slate-100 text-slate-400 hover:bg-slate-200 border-slate-300 cursor-pointer";
+              label = count;
+            }
+          }
+
+          html += `
+            <div onclick="toggleSquare('${idx}')" 
+                 class="grid-cell select-none rounded-lg border flex items-center justify-center font-bold text-xs ${cellBg}">
+              ${label}
+            </div>
+          `;
+          count++;
+        }
+      }
+      html += `</div>`;
+
+      // Column and Row header labels
+      container.innerHTML = `
+        <div class="flex flex-col items-center">
+          <div class="text-xs font-black text-blue-600 mb-1 flex items-center gap-1">
+            <i class="fa-solid fa-arrow-left"></i> ${w} Spalten (${w} cm) <i class="fa-solid fa-arrow-right"></i>
+          </div>
+          <div class="flex items-center">
+            <div class="text-xs font-black text-indigo-600 mr-2 [writing-mode:vertical-lr] rotate-180 flex items-center gap-1">
+              <i class="fa-solid fa-arrow-left"></i> ${h} Zeilen (${h} cm) <i class="fa-solid fa-arrow-right"></i>
+            </div>
+            ${html}
+          </div>
+        </div>
+      `;
+    }
+
+    /* ----------------------------------------------------
+       MODULE 2: VOLUMEN VERSTEHEN (3D QUADER & SCHICHTEN)
+       ---------------------------------------------------- */
+    let showWireframe = true;
+
+    function toggleWireframe() {
+      showWireframe = !showWireframe;
+      updateVolumeScene(false);
+    }
+
+    function updateVolumeScene(syncLayerSlider = true) {
+      const l = parseInt(document.getElementById('slider-vol-l').value);
+      const w = parseInt(document.getElementById('slider-vol-w').value);
+      const h = parseInt(document.getElementById('slider-vol-h').value);
+
+      const layerSlider = document.getElementById('slider-vol-layer');
+      layerSlider.max = h;
+      if (syncLayerSlider || parseInt(layerSlider.value) > h) {
+        layerSlider.value = h;
+      }
+      const activeLayers = parseInt(layerSlider.value);
+
+      document.getElementById('label-vol-l').textContent = `${l} cm`;
+      document.getElementById('label-vol-w').textContent = `${w} cm`;
+      document.getElementById('label-vol-h').textContent = `${h} cm`;
+      document.getElementById('label-vol-layer').textContent = `${activeLayers} von ${h}`;
+
+      const baseArea = l * w;
+      const totalVolume = l * w * h;
+      const visibleVolume = l * w * activeLayers;
+
+      document.getElementById('vol-calc-base').textContent = `${l} × ${w} = ${baseArea}`;
+      document.getElementById('vol-calc-total').textContent = `${baseArea} cm² × ${h} cm = ${totalVolume} cm³`;
+      document.getElementById('vol-cube-count').textContent = totalVolume;
+
+      document.getElementById('explain-base-cubes').textContent = baseArea;
+      document.getElementById('explain-height-cubes').textContent = h;
+
+      drawIsometricCubes(l, w, h, activeLayers);
+    }
+
+    function drawIsometricCubes(nx, ny, nz, activeLayers) {
+      const canvas = document.getElementById('canvas-isometric');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Isometric projection parameters
+      const originX = canvas.width / 2;
+      const originY = canvas.height * 0.72;
+      const scale = Math.min(28, 220 / Math.max(nx + ny, nz * 1.5));
+
+      const cos30 = Math.cos(Math.PI / 6);
+      const sin30 = Math.sin(Math.PI / 6);
+
+      function project(x, y, z) {
+        // x goes bottom-right, y goes bottom-left, z goes straight up
+        const isoX = originX + (x - y) * scale * cos30;
+        const isoY = originY + (x + y) * scale * sin30 - z * scale;
+        return { x: isoX, y: isoY };
+      }
+
+      function drawSingleCube(x, y, z, layerIndex) {
+        // Color shades according to layer
+        const layerColors = [
+          { top: '#38bdf8', left: '#0284c7', right: '#0369a1' }, // Sky
+          { top: '#34d399', left: '#059669', right: '#047857' }, // Emerald
+          { top: '#fbbf24', left: '#d97706', right: '#b45309' }, // Amber
+          { top: '#a78bfa', left: '#7c3aed', right: '#6d28d9' }, // Purple
+          { top: '#f472b6', left: '#db2777', right: '#be185d' }  // Pink
+        ];
+        const colors = layerColors[(layerIndex - 1) % layerColors.length];
+
+        const p0 = project(x, y, z);
+        const p1 = project(x + 1, y, z);
+        const p2 = project(x + 1, y + 1, z);
+        const p3 = project(x, y + 1, z);
+
+        const p4 = project(x, y, z + 1);
+        const p5 = project(x + 1, y, z + 1);
+        const p6 = project(x + 1, y + 1, z + 1);
+        const p7 = project(x, y + 1, z + 1);
+
+        // Right Face (x + 1)
+        ctx.fillStyle = colors.right;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p6.x, p6.y);
+        ctx.lineTo(p5.x, p5.y);
+        ctx.closePath();
+        ctx.fill();
+        if (showWireframe) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Left Face (y + 1)
+        ctx.fillStyle = colors.left;
+        ctx.beginPath();
+        ctx.moveTo(p3.x, p3.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p6.x, p6.y);
+        ctx.lineTo(p7.x, p7.y);
+        ctx.closePath();
+        ctx.fill();
+        if (showWireframe) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Top Face (z + 1)
+        ctx.fillStyle = colors.top;
+        ctx.beginPath();
+        ctx.moveTo(p4.x, p4.y);
+        ctx.lineTo(p5.x, p5.y);
+        ctx.lineTo(p6.x, p6.y);
+        ctx.lineTo(p7.x, p7.y);
+        ctx.closePath();
+        ctx.fill();
+        if (showWireframe) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+
+      // Draw cubes back-to-front (Painter's algorithm)
+      // z from 0 to activeLayers - 1
+      // x from 0 to nx - 1, y from 0 to ny - 1
+      for (let z = 0; z < activeLayers; z++) {
+        for (let x = 0; x < nx; x++) {
+          for (let y = 0; y < ny; y++) {
+            drawSingleCube(x, y, z, z + 1);
+          }
+        }
+      }
+    }
+
+    /* ----------------------------------------------------
+       MODULE 3: EINHEITEN UMRECHNEN (TREPPE & KONVERTER)
+       REIHENFOLGE: LINKS GRÖßTE -> RECHTS KLEINSTE
+       ---------------------------------------------------- */
+    let currentUnitType = 'area'; // 'area' or 'volume'
+
+    // Area units sorted from LARGEST (km²) to SMALLEST (mm²)
+    const areaUnitsDescending = [
+      { id: 'km2', label: 'km²', name: 'Quadratkilometer', factorToBase: 1000000 },
+      { id: 'ha',  label: 'ha',  name: 'Hektar',             factorToBase: 10000 },
+      { id: 'a',   label: 'a',   name: 'Ar',                 factorToBase: 100 },
+      { id: 'm2',  label: 'm²',  name: 'Quadratmeter',       factorToBase: 1 },
+      { id: 'dm2', label: 'dm²', name: 'Quadratdezimeter',   factorToBase: 0.01 },
+      { id: 'cm2', label: 'cm²', name: 'Quadratzentimeter',  factorToBase: 0.0001 },
+      { id: 'mm2', label: 'mm²', name: 'Quadratmillimeter',  factorToBase: 0.000001 }
+    ];
+
+    // Volume units sorted from LARGEST (m³) to SMALLEST (mm³)
+    const volumeUnitsDescending = [
+      { id: 'm3',  label: 'm³',         name: 'Kubikmeter (1.000 l)', factorToBase: 1 },
+      { id: 'dm3', label: 'dm³ (Liter)',name: 'Kubikdezimeter',       factorToBase: 0.001 },
+      { id: 'cm3', label: 'cm³ (ml)',   name: 'Kubikzentimeter',      factorToBase: 0.000001 },
+      { id: 'mm3', label: 'mm³',        name: 'Kubikmillimeter',      factorToBase: 0.000000001 }
+    ];
+
+    function switchUnitType(type) {
+      currentUnitType = type;
+      const btnArea = document.getElementById('btn-unit-area');
+      const btnVol = document.getElementById('btn-unit-vol');
+      const title = document.getElementById('unit-stepper-title');
+
+      if (type === 'area') {
+        btnArea.className = "px-5 py-2 rounded-xl text-sm font-bold bg-white text-indigo-700 shadow-sm transition";
+        btnVol.className = "px-5 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 transition";
+        title.innerHTML = '<i class="fa-solid fa-stairs text-indigo-600"></i> Die Flächen-Treppe (Größte Einheit links → Kleinste Einheit rechts)';
+      } else {
+        btnVol.className = "px-5 py-2 rounded-xl text-sm font-bold bg-white text-indigo-700 shadow-sm transition";
+        btnArea.className = "px-5 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 transition";
+        title.innerHTML = '<i class="fa-solid fa-stairs text-indigo-600"></i> Die Volumen-Treppe (Größte Einheit links → Kleinste Einheit rechts)';
+      }
+
+      renderUnitSteps();
+      populateConverterSelects();
+      calculateUnitConversion();
+    }
+
+    function renderUnitSteps() {
+      const container = document.getElementById('unit-steps-container');
+      const units = currentUnitType === 'area' ? areaUnitsDescending : volumeUnitsDescending;
+      const stepFactor = currentUnitType === 'area' ? '100' : '1.000';
+      const totalSteps = units.length;
+
+      // Realistic descending staircase from left (high) to right (low)
+      let html = `<div class="flex items-start min-w-[720px] px-3 pt-6 pb-8 gap-1.5">`;
+
+      units.forEach((u, idx) => {
+        // Step offset down: index 0 is top (margin 0), index increases downward
+        const marginTopPx = idx * (currentUnitType === 'area' ? 24 : 36);
+
+        html += `
+          <div class="flex flex-col items-center" style="margin-top: ${marginTopPx}px;">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex flex-col items-center justify-center shadow-lg font-mono border-2 border-white">
+              <span class="text-base sm:text-lg font-black tracking-tight">${u.label}</span>
+              <span class="text-[9px] text-indigo-200 uppercase font-semibold">Stufe ${idx + 1}</span>
+            </div>
+            <span class="text-[11px] font-bold text-slate-700 mt-2 text-center max-w-[85px] leading-tight">${u.name}</span>
+          </div>
+        `;
+
+        if (idx < totalSteps - 1) {
+          const connectorMarginTop = marginTopPx + (currentUnitType === 'area' ? 14 : 20);
+          html += `
+            <div class="flex-1 flex flex-col items-center justify-center px-1" style="margin-top: ${connectorMarginTop}px;">
+              <!-- Towards smaller unit (to the right): Multiply -->
+              <div class="w-full flex items-center justify-center text-[10px] font-extrabold text-emerald-600 mb-1 bg-emerald-50 px-1 py-0.5 rounded-full border border-emerald-200">
+                · ${stepFactor} <i class="fa-solid fa-arrow-right ml-1"></i>
+              </div>
+              <div class="w-full h-1.5 bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-200 rounded-full"></div>
+              <!-- Towards larger unit (to the left): Divide -->
+              <div class="w-full flex items-center justify-center text-[10px] font-extrabold text-amber-700 mt-1 bg-amber-50 px-1 py-0.5 rounded-full border border-amber-200">
+                <i class="fa-solid fa-arrow-left mr-1"></i> : ${stepFactor}
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+
+      // Update Why Box
+      const whyTitle = document.getElementById('why-title');
+      const whyDesc = document.getElementById('why-desc');
+      const whyVisual = document.getElementById('mini-why-visual');
+
+      if (currentUnitType === 'area') {
+        whyTitle.textContent = "Warum ist der Faktor bei Flächen 100?";
+        whyDesc.innerHTML = "Ein Quadrat von <strong>1 cm Kantenlänge</strong> ist <strong>10 mm × 10 mm</strong> groß.<br>10 Reihen × 10 Spalten = <strong>100 kleine mm²-Quadrate</strong>!<br>Deshalb hat jeder Schritt nach rechts <strong>zwei Nullen mehr (· 100)</strong>, nach links verschwinden zwei Nullen (: 100).";
+        
+        let gridHtml = '<div style="display:grid; grid-template-columns: repeat(10, 1fr); height:100%; width:100%; gap:1px; background:#c7d2fe; padding:1px;">';
+        for (let i = 0; i < 100; i++) {
+          gridHtml += '<div style="background:#4f46e5; border-radius:1px;"></div>';
+        }
+        gridHtml += '</div>';
+        whyVisual.innerHTML = gridHtml;
+      } else {
+        whyTitle.textContent = "Warum ist der Faktor bei Volumen 1.000?";
+        whyDesc.innerHTML = "Ein Würfel von <strong>1 dm Kantenlänge</strong> ist <strong>10 cm × 10 cm × 10 cm</strong> groß.<br>10 × 10 × 10 = <strong>1.000 kleine 1 cm³-Würfel</strong>!<br>Deshalb hat jeder Schritt nach rechts <strong>drei Nullen mehr (· 1.000)</strong>, nach links verschwinden drei Nullen (: 1.000).";
+        whyVisual.innerHTML = `
+          <div class="w-full h-full flex flex-col items-center justify-center text-indigo-600">
+            <i class="fa-solid fa-cubes text-5xl animate-bounce"></i>
+            <span class="text-[11px] font-black mt-2">10 × 10 × 10 = 1.000</span>
+          </div>
+        `;
+      }
+    }
+
+    function populateConverterSelects() {
+      const fromSel = document.getElementById('convert-from');
+      const toSel = document.getElementById('convert-to');
+      const units = currentUnitType === 'area' ? areaUnitsDescending : volumeUnitsDescending;
+
+      fromSel.innerHTML = '';
+      toSel.innerHTML = '';
+
+      units.forEach(u => {
+        const opt1 = new Option(`${u.label} (${u.name})`, u.id);
+        const opt2 = new Option(`${u.label} (${u.name})`, u.id);
+        fromSel.add(opt1);
+        toSel.add(opt2);
+      });
+
+      // Default values
+      if (currentUnitType === 'area') {
+        fromSel.value = 'dm2';
+        toSel.value = 'cm2';
+      } else {
+        fromSel.value = 'dm3';
+        toSel.value = 'cm3';
+      }
+    }
+
+    function calculateUnitConversion() {
+      const val = parseFloat(document.getElementById('convert-val').value) || 0;
+      const fromId = document.getElementById('convert-from').value;
+      const toId = document.getElementById('convert-to').value;
+      const units = currentUnitType === 'area' ? areaUnitsDescending : volumeUnitsDescending;
+
+      const fromUnit = units.find(u => u.id === fromId);
+      const toUnit = units.find(u => u.id === toId);
+
+      if (!fromUnit || !toUnit) return;
+
+      const valInBase = val * fromUnit.factorToBase;
+      const result = valInBase / toUnit.factorToBase;
+
+      let formattedResult;
+      if (result >= 1000000 || (result < 0.0001 && result > 0)) {
+        formattedResult = result.toExponential(4);
+      } else {
+        formattedResult = parseFloat(result.toFixed(6)).toLocaleString('de-DE');
+      }
+
+      document.getElementById('convert-result-text').textContent = `${val} ${fromUnit.label} = ${formattedResult} ${toUnit.label}`;
+
+      const ratio = toUnit.factorToBase / fromUnit.factorToBase;
+      if (ratio === 1) {
+        document.getElementById('convert-step-explanation').textContent = "Gleiche Einheit!";
+      } else if (ratio < 1) {
+        const factor = Math.round(1 / ratio);
+        document.getElementById('convert-step-explanation').textContent = `Nach rechts (kleinere Einheit): Multipliziere mit ${factor.toLocaleString('de-DE')}`;
+      } else {
+        const factor = Math.round(ratio);
+        document.getElementById('convert-step-explanation').textContent = `Nach links (größere Einheit): Teile durch ${factor.toLocaleString('de-DE')}`;
+      }
+    }
+
+    /* ----------------------------------------------------
+       MODULE 4: VOLUMEN & LITER
+       ---------------------------------------------------- */
+    function fillPreset(ml) {
+      document.getElementById('slider-tank').value = ml;
+      updateTankFromSlider();
+    }
+
+    function updateTankFromSlider() {
+      const ml = parseInt(document.getElementById('slider-tank').value);
+      const tankWater = document.getElementById('tank-water');
+      const labelTank = document.getElementById('label-tank-pct');
+
+      // Percentage height
+      const pct = (ml / 1000) * 100;
+      tankWater.style.height = `${pct}%`;
+      labelTank.textContent = `${ml} ml`;
+
+      // Live conversions
+      document.getElementById('tank-ml').textContent = `${ml} ml`;
+      document.getElementById('tank-cm3').textContent = `${ml} cm³`;
+      
+      const liters = (ml / 1000).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 3 });
+      document.getElementById('tank-liter').textContent = `${liters} Liter`;
+      document.getElementById('tank-dm3').textContent = `${liters} dm³`;
+    }
+
+    /* ----------------------------------------------------
+       MODULE 5: QUIZ & INTERAKTIVE ÜBUNGEN
+       ---------------------------------------------------- */
+    const quizQuestions = [
+      {
+        category: "Flächen berechnen",
+        question: "Ein Teppich im Kinderzimmer ist 4 m lang und 3 m breit. Welchen Flächeninhalt hat er?",
+        options: [
+          { text: "7 m²", correct: false },
+          { text: "12 m²", correct: true },
+          { text: "14 m²", correct: false },
+          { text: "24 m²", correct: false }
+        ],
+        explanation: "Richtig! Fläche = Länge × Breite: 4 m × 3 m = 12 m² (genau 12 Einheitsquadrate)."
+      },
+      {
+        category: "Volumen & Würfel",
+        question: "Ein Quader besteht aus einer Grundfläche mit 15 Einheitswürfeln. Er ist 4 Schichten hoch. Wie groß ist sein Rauminhalt?",
+        options: [
+          { text: "19 cm³", correct: false },
+          { text: "30 cm³", correct: false },
+          { text: "60 cm³", correct: true },
+          { text: "45 cm³", correct: false }
+        ],
+        explanation: "Perfekt! Nach dem Schichten-Prinzip rechnet man Grundfläche × Höhe: 15 × 4 = 60 cm³."
+      },
+      {
+        category: "Einheiten umrechnen",
+        question: "Wie viele Quadratzentimeter (cm²) passen in einen Quadratdezimeter (1 dm²)?",
+        options: [
+          { text: "10 cm²", correct: false },
+          { text: "100 cm²", correct: true },
+          { text: "1.000 cm²", correct: false },
+          { text: "10.000 cm²", correct: false }
+        ],
+        explanation: "Ganz genau! Da 1 dm = 10 cm ist, gilt 10 cm × 10 cm = 100 cm²."
+      },
+      {
+        category: "Volumen & Liter",
+        question: "Ein Schüler füllt einen Glaskubus von 10 cm × 10 cm × 10 cm (= 1 dm³) randvoll mit Wasser. Wie viel Liter Wasser sind das?",
+        options: [
+          { text: "0,1 Liter", correct: false },
+          { text: "1 Liter", correct: true },
+          { text: "10 Liter", correct: false },
+          { text: "1.000 Liter", correct: false }
+        ],
+        explanation: "Exakt! 1 dm³ entspricht per Definition genau 1 Liter (oder 1.000 ml bzw. 1.000 cm³)."
+      },
+      {
+        category: "Alltags-Schätzung",
+        question: "Wie viele 1-Liter-Milchtüten passen rein rechnerisch in einen riesigen Wasserwürfel von 1 m³?",
+        options: [
+          { text: "10 Milchtüten", correct: false },
+          { text: "100 Milchtüten", correct: false },
+          { text: "1.000 Milchtüten", correct: true },
+          { text: "10.000 Milchtüten", correct: false }
+        ],
+        explanation: "Klasse! 1 m³ = 1.000 dm³ = 1.000 Liter. Also passen genau 1.000 Milchtüten hinein!"
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let quizScore = 0;
+    let questionAnswered = false;
+
+    function renderCurrentQuestion() {
+      questionAnswered = false;
+      const q = quizQuestions[currentQuestionIdx];
+
+      document.getElementById('quiz-question-num').textContent = `${currentQuestionIdx + 1} / ${quizQuestions.length}`;
+      document.getElementById('quiz-score-display').textContent = `${quizScore} Punkte`;
+      document.getElementById('quiz-category-badge').textContent = q.category;
+      document.getElementById('quiz-question-text').textContent = q.question;
+
+      const fb = document.getElementById('quiz-feedback');
+      fb.className = "hidden p-4 rounded-2xl border text-sm font-semibold transition-all";
+      fb.innerHTML = '';
+
+      document.getElementById('quiz-next-btn').classList.add('hidden');
+
+      const optionsBox = document.getElementById('quiz-options');
+      optionsBox.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "quiz-opt-btn p-4 rounded-2xl border-2 border-slate-200 hover:border-blue-400 bg-slate-50 hover:bg-blue-50/50 text-left font-bold text-slate-800 transition flex items-center justify-between";
+        btn.innerHTML = `
+          <span>${opt.text}</span>
+          <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs text-transparent checkmark">
+            <i class="fa-solid fa-check"></i>
+          </span>
+        `;
+        btn.onclick = () => selectQuizAnswer(idx, btn);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function selectQuizAnswer(selectedIndex, buttonEl) {
+      if (questionAnswered) return;
+      questionAnswered = true;
+
+      const q = quizQuestions[currentQuestionIdx];
+      const isCorrect = q.options[selectedIndex].correct;
+      const allButtons = document.querySelectorAll('.quiz-opt-btn');
+
+      allButtons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (q.options[idx].correct) {
+          btn.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-left font-bold flex items-center justify-between";
+          btn.querySelector('.checkmark').className = "w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs";
+        } else if (idx === selectedIndex) {
+          btn.className = "p-4 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-left font-bold flex items-center justify-between";
+          btn.querySelector('.checkmark').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+          btn.querySelector('.checkmark').className = "w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs";
+        } else {
+          btn.className = "p-4 rounded-2xl border border-slate-200 bg-slate-100 text-slate-400 text-left font-semibold opacity-60 flex items-center justify-between";
+        }
+      });
+
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+
+      if (isCorrect) {
+        quizScore++;
+        document.getElementById('quiz-score-display').textContent = `${quizScore} Punkte`;
+        fb.className = "p-4 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-900 text-sm";
+        fb.innerHTML = `<div class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-600 text-lg mt-0.5"></i><div><strong>Richtig!</strong> ${q.explanation}</div></div>`;
+      } else {
+        fb.className = "p-4 rounded-2xl border border-rose-300 bg-rose-50 text-rose-900 text-sm";
+        fb.innerHTML = `<div class="flex items-start gap-2"><i class="fa-solid fa-circle-xmark text-rose-600 text-lg mt-0.5"></i><div><strong>Leider nicht ganz.</strong> ${q.explanation}</div></div>`;
+      }
+
+      document.getElementById('quiz-next-btn').classList.remove('hidden');
+    }
+
+    function nextQuizQuestion() {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < quizQuestions.length) {
+        renderCurrentQuestion();
+      } else {
+        showQuizResults();
+      }
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-body').classList.add('hidden');
+      const comp = document.getElementById('quiz-completed');
+      comp.classList.remove('hidden');
+
+      let praise = "Gute Arbeit!";
+      if (quizScore === quizQuestions.length) {
+        praise = "Hervorragend! Du bist ein echter Mathe-Champion!";
+      } else if (quizScore >= 3) {
+        praise = "Sehr gut! Du hast die Grundlagen schon super verstanden!";
+      }
+
+      document.getElementById('quiz-final-score-text').innerHTML = `
+        <strong>${praise}</strong><br>Du hast <strong>${quizScore} von ${quizQuestions.length}</strong> Fragen richtig gelöst.
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestionIdx = 0;
+      quizScore = 0;
+      document.getElementById('quiz-body').classList.remove('hidden');
+      document.getElementById('quiz-completed').classList.add('hidden');
+      renderCurrentQuestion();
+    }
+
+    /* ----------------------------------------------------
+       MODULE 5: GROßER TRAININGS- & ÜBUNGSBEREICH (15 AUFGABEN)
+       ---------------------------------------------------- */
+    const masterExercises = [
+      {
+        id: 1,
+        filter: "area",
+        category: "Flächen berechnen (2D)",
+        type: "mc",
+        question: "Ein Teppich im Kinderzimmer ist 4 m lang und 3 m breit. Welchen Flächeninhalt hat er?",
+        options: [
+          { text: "7 m²", correct: false },
+          { text: "12 m²", correct: true },
+          { text: "14 m²", correct: false },
+          { text: "24 m²", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> Bei einem Rechteck rechnet man Länge × Breite. Hier: 4 m × 3 m = <strong>12 m²</strong> (entspricht 12 Einheitsquadraten von je 1 m²)."
+      },
+      {
+        id: 2,
+        filter: "area",
+        category: "Flächen & Einheitsquadrate",
+        type: "numeric",
+        question: "Ein Schüler zeichnet ein Rechteck mit 8 Spalten und 6 Zeilen aus 1 cm²-Quadraten. Wie viele cm² hat das Rechteck insgesamt?",
+        numericAnswer: "48",
+        unitHint: "cm²",
+        explanation: "<strong>Lösungsweg:</strong> 8 Spalten × 6 Zeilen = 8 cm × 6 cm = <strong>48 cm²</strong>."
+      },
+      {
+        id: 3,
+        filter: "volume",
+        category: "Volumen & Würfelschichten (3D)",
+        type: "mc",
+        question: "Ein Quader hat eine Grundfläche aus 15 Würfeln (1 cm³). Er ist 4 Schichten hoch aufgebaut. Wie groß ist sein Volumen?",
+        options: [
+          { text: "19 cm³", correct: false },
+          { text: "30 cm³", correct: false },
+          { text: "60 cm³", correct: true },
+          { text: "45 cm³", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> Nach dem Schichten-Prinzip rechnet man Grundfläche × Höhe: 15 cm² × 4 cm = <strong>60 cm³</strong>."
+      },
+      {
+        id: 4,
+        filter: "volume",
+        category: "Volumen berechnen (3D)",
+        type: "numeric",
+        question: "Ein Holzbalken hat die Maße: Länge = 5 dm, Breite = 2 dm und Höhe = 3 dm. Welches Volumen hat der Balken in dm³?",
+        numericAnswer: "30",
+        unitHint: "dm³",
+        explanation: "<strong>Lösungsweg:</strong> V = a · b · c = 5 dm · 2 dm · 3 dm = 10 · 3 = <strong>30 dm³</strong>."
+      },
+      {
+        id: 5,
+        filter: "units",
+        category: "Flächen-Treppe",
+        type: "mc",
+        question: "Du gehst auf der Einheitentreppe von 1 dm² eine Stufe nach rechts zu cm². Wie lautet der Umrechnungsfaktor?",
+        options: [
+          { text: "Geteilt durch 10", correct: false },
+          { text: "Mal 10", correct: false },
+          { text: "Mal 100", correct: true },
+          { text: "Mal 1.000", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> Nach rechts geht es in die kleinere Einheit. Da es eine Fläche ist (10 cm × 10 cm), multipliziert man mit <strong>· 100</strong>. Also: 1 dm² = 100 cm²."
+      },
+      {
+        id: 6,
+        filter: "units",
+        category: "Volumen-Treppe",
+        type: "numeric",
+        question: "Wie viele Kubikzentimeter (cm³) sind 7 Kubikdezimeter (dm³)? (Eine Stufe nach rechts auf der Volumen-Treppe)",
+        numericAnswer: "7000",
+        unitHint: "cm³",
+        explanation: "<strong>Lösungsweg:</strong> Eine Stufe nach rechts bei Raummaßen bedeutet <strong>· 1.000</strong>. Daher: 7 · 1.000 = <strong>7.000 cm³</strong>."
+      },
+      {
+        id: 7,
+        filter: "liter",
+        category: "Volumen & Liter",
+        type: "mc",
+        question: "Welches Raummaß entspricht exakt dem Inhalt von genau 1 Liter Wasser?",
+        options: [
+          { text: "1 cm³", correct: false },
+          { text: "1 dm³", correct: true },
+          { text: "1 m³", correct: false },
+          { text: "10 dm³", correct: false }
+        ],
+        explanation: "<strong>Merksatz:</strong> 1 Würfel von 10 cm × 10 cm × 10 cm = <strong>1 dm³</strong> fasst haargenau <strong>1 Liter</strong> Wasser!"
+      },
+      {
+        id: 8,
+        filter: "liter",
+        category: "Volumen & Liter",
+        type: "numeric",
+        question: "Ein Medizinfläschchen enthält 250 ml Hustensaft. Wie viel cm³ sind das?",
+        numericAnswer: "250",
+        unitHint: "cm³",
+        explanation: "<strong>Lösungsweg:</strong> Da 1 ml genau identisch mit 1 cm³ ist, sind 250 ml genau <strong>250 cm³</strong>."
+      },
+      {
+        id: 9,
+        filter: "real",
+        category: "Alltags-Mathematik",
+        type: "mc",
+        question: "Ein quaderförmiges Aquarium ist 60 cm lang, 30 cm breit und 40 cm hoch. Wie viel Liter Wasser passen hinein?",
+        options: [
+          { text: "7,2 Liter", correct: false },
+          { text: "72 Liter", correct: true },
+          { text: "720 Liter", correct: false },
+          { text: "130 Liter", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> In Dezimetern rechnen: 6 dm × 3 dm × 4 dm = 72 dm³. Da 1 dm³ = 1 Liter ist, fasst das Becken <strong>72 Liter</strong>!"
+      },
+      {
+        id: 10,
+        filter: "units",
+        category: "Flächen-Treppe (Nach links dividieren)",
+        type: "numeric",
+        question: "Rechne um: 500 cm² in dm². (Eine Stufe nach links auf der Treppe: : 100)",
+        numericAnswer: "5",
+        unitHint: "dm²",
+        explanation: "<strong>Lösungsweg:</strong> Nach links in die größere Einheit dividieren wir durch 100: 500 : 100 = <strong>5 dm²</strong>."
+      },
+      {
+        id: 11,
+        filter: "volume",
+        category: "Würfel-Eigenschaften",
+        type: "numeric",
+        question: "Ein Zauberwürfel hat eine Kantenlänge von 3 cm. Wie viele kleine 1 cm³-Würfel enthält er insgesamt?",
+        numericAnswer: "27",
+        unitHint: "Würfel",
+        explanation: "<strong>Lösungsweg:</strong> V = a · a · a = 3 · 3 · 3 = <strong>27</strong> kleine Würfel (3 Schichten zu je 9 Würfeln)."
+      },
+      {
+        id: 12,
+        filter: "liter",
+        category: "Große Wassermengen",
+        type: "mc",
+        question: "Eine Regentonne im Garten fasst 1 Kubikmeter (1 m³) Regenwasser. Wie vielen 1-Liter-Milchtüten entspricht das?",
+        options: [
+          { text: "10 Milchtüten", correct: false },
+          { text: "100 Milchtüten", correct: false },
+          { text: "1.000 Milchtüten", correct: true },
+          { text: "10.000 Milchtüten", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> 1 m³ = 1.000 dm³. Da 1 dm³ = 1 Liter ist, passen genau <strong>1.000 Liter</strong> (Milchtüten) in 1 m³!"
+      },
+      {
+        id: 13,
+        filter: "real",
+        category: "Fliesen & Handwerker",
+        type: "numeric",
+        question: "Ein Badezimmerboden hat eine Fläche von 12 m². Eine Schachtel Bodenfliesen reicht genau für 3 m². Wie viele Schachteln muss man kaufen?",
+        numericAnswer: "4",
+        unitHint: "Schachteln",
+        explanation: "<strong>Lösungsweg:</strong> Gesamtfläche geteilt durch Fläche pro Schachtel: 12 m² : 3 m² = <strong>4 Schachteln</strong>."
+      },
+      {
+        id: 14,
+        filter: "units",
+        category: "Landwirtschaftliche Einheiten",
+        type: "mc",
+        question: "Auf der Flächen-Treppe steht zwischen Quadratmeter (m²) und Quadratkilometer (km²) das Ar (a) und das Hektar (ha). Wie viele m² hat 1 Hektar (ha)?",
+        options: [
+          { text: "100 m²", correct: false },
+          { text: "1.000 m²", correct: false },
+          { text: "10.000 m²", correct: true },
+          { text: "100.000 m²", correct: false }
+        ],
+        explanation: "<strong>Lösungsweg:</strong> 1 a = 100 m². Eine weitere Stufe mit Faktor 100 ergibt: 100 · 100 = <strong>10.000 m²</strong> (entspricht einem Fußballfeld)."
+      },
+      {
+        id: 15,
+        filter: "liter",
+        category: "Liter & Milliliter",
+        type: "numeric",
+        question: "Aus einer 2-Liter-Flasche Limo füllst du vier Gläser mit jeweils 250 ml. Wie viele Milliliter (ml) bleiben in der Flasche übrig?",
+        numericAnswer: "1000",
+        unitHint: "ml",
+        explanation: "<strong>Lösungsweg:</strong> 2 Liter = 2.000 ml. Eingeschenkt werden 4 × 250 ml = 1.000 ml. Es bleiben 2.000 ml - 1.000 ml = <strong>1.000 ml</strong> (genau 1 Liter) übrig."
+      }
+    ];
+
+    let currentFilter = 'all';
+    let filteredQuestions = [...masterExercises];
+    let currentExerciseIdx = 0;
+    let quizStars = 0;
+    let answeredCurrent = false;
+
+    function setQuizFilter(filterName) {
+      currentFilter = filterName;
+      // Update UI button styles
+      const filterKeys = ['all', 'area', 'volume', 'units', 'liter', 'real'];
+      filterKeys.forEach(k => {
+        const btn = document.getElementById('filter-' + k);
+        if (btn) {
+          if (k === filterName) {
+            btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white transition";
+          } else {
+            btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition";
+          }
+        }
+      });
+
+      if (filterName === 'all') {
+        filteredQuestions = [...masterExercises];
+      } else {
+        filteredQuestions = masterExercises.filter(q => q.filter === filterName);
+      }
+
+      currentExerciseIdx = 0;
+      quizStars = 0;
+      document.getElementById('quiz-body').classList.remove('hidden');
+      document.getElementById('quiz-completed').classList.add('hidden');
+      renderExercise();
+    }
+
+    function renderExercise() {
+      answeredCurrent = false;
+      const q = filteredQuestions[currentExerciseIdx];
+
+      document.getElementById('quiz-question-num').textContent = `${currentExerciseIdx + 1} / ${filteredQuestions.length}`;
+      document.getElementById('quiz-score-display').textContent = `${quizStars} Sterne`;
+      document.getElementById('quiz-category-badge').textContent = q.category;
+      document.getElementById('quiz-type-badge').textContent = q.type === 'mc' ? 'Multiple Choice' : 'Zahleneingabe';
+      document.getElementById('quiz-question-text').textContent = q.question;
+
+      // Feedback box reset
+      const fb = document.getElementById('quiz-feedback');
+      fb.className = "hidden p-5 rounded-2xl border text-sm transition-all leading-relaxed";
+      fb.innerHTML = '';
+      document.getElementById('quiz-next-btn').classList.add('hidden');
+
+      const optionsBox = document.getElementById('quiz-options');
+      const numericBox = document.getElementById('quiz-numeric-container');
+      const numInput = document.getElementById('quiz-num-input');
+
+      if (q.type === 'mc') {
+        numericBox.classList.add('hidden');
+        optionsBox.classList.remove('hidden');
+        optionsBox.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "quiz-opt-btn p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 bg-slate-50 hover:bg-indigo-50/40 text-left font-bold text-slate-800 transition flex items-center justify-between";
+          btn.innerHTML = `
+            <span>${opt.text}</span>
+            <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs text-transparent checkmark">
+              <i class="fa-solid fa-check"></i>
+            </span>
+          `;
+          btn.onclick = () => selectExerciseAnswer(idx);
+          optionsBox.appendChild(btn);
+        });
+      } else {
+        optionsBox.classList.add('hidden');
+        numericBox.classList.remove('hidden');
+        numInput.value = '';
+        numInput.disabled = false;
+        numInput.placeholder = `Antwort eingeben (in ${q.unitHint})...`;
+        document.getElementById('quiz-btn-submit-numeric').disabled = false;
+        setTimeout(() => numInput.focus(), 50);
+      }
+    }
+
+    function selectExerciseAnswer(selectedIndex) {
+      if (answeredCurrent) return;
+      answeredCurrent = true;
+
+      const q = filteredQuestions[currentExerciseIdx];
+      const isCorrect = q.options[selectedIndex].correct;
+      const allButtons = document.querySelectorAll('.quiz-opt-btn');
+
+      allButtons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (q.options[idx].correct) {
+          btn.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-left font-bold flex items-center justify-between";
+          btn.querySelector('.checkmark').className = "w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs";
+        } else if (idx === selectedIndex) {
+          btn.className = "p-4 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-left font-bold flex items-center justify-between";
+          btn.querySelector('.checkmark').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+          btn.querySelector('.checkmark').className = "w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs";
+        } else {
+          btn.className = "p-4 rounded-2xl border border-slate-200 bg-slate-100 text-slate-400 text-left font-semibold opacity-60 flex items-center justify-between";
+        }
+      });
+
+      showExerciseFeedback(isCorrect, q.explanation);
+    }
+
+    function checkNumericAnswer() {
+      if (answeredCurrent) return;
+      const q = filteredQuestions[currentExerciseIdx];
+      const input = document.getElementById('quiz-num-input');
+      const userVal = input.value.trim().replace(',', '.');
+
+      if (!userVal) {
+        input.focus();
+        return;
+      }
+
+      answeredCurrent = true;
+      input.disabled = true;
+      document.getElementById('quiz-btn-submit-numeric').disabled = true;
+
+      // Clean compare
+      const targetVal = q.numericAnswer.trim().replace(',', '.');
+      const isCorrect = parseFloat(userVal) === parseFloat(targetVal);
+
+      if (isCorrect) {
+        input.className = "flex-1 px-4 py-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold text-lg";
+      } else {
+        input.className = "flex-1 px-4 py-3 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-bold text-lg";
+      }
+
+      showExerciseFeedback(isCorrect, q.explanation + ` (Gesuchte Zahl: <strong>${q.numericAnswer} ${q.unitHint}</strong>)`);
+    }
+
+    // Allow Enter key for numeric inputs
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const numBox = document.getElementById('quiz-numeric-container');
+        if (!numBox.classList.contains('hidden') && !answeredCurrent) {
+          checkNumericAnswer();
+        } else if (answeredCurrent && !document.getElementById('quiz-next-btn').classList.contains('hidden')) {
+          nextQuizQuestion();
+        }
+      }
+    });
+
+    function showExerciseFeedback(isCorrect, explanationHtml) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+
+      if (isCorrect) {
+        quizStars++;
+        document.getElementById('quiz-score-display').textContent = `${quizStars} Sterne`;
+        fb.className = "p-4 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-900 text-sm";
+        fb.innerHTML = `
+          <div class="flex items-start gap-3">
+            <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5"></i>
+            <div>
+              <strong class="text-emerald-800 text-base block mb-0.5">Richtig gelöst! +1 Stern ⭐</strong>
+              <div class="text-xs sm:text-sm text-emerald-900 leading-relaxed">${explanationHtml}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        fb.className = "p-4 rounded-2xl border border-rose-300 bg-rose-50 text-rose-900 text-sm";
+        fb.innerHTML = `
+          <div class="flex items-start gap-3">
+            <i class="fa-solid fa-circle-xmark text-rose-600 text-xl mt-0.5"></i>
+            <div>
+              <strong class="text-rose-800 text-base block mb-0.5">Nicht ganz richtig!</strong>
+              <div class="text-xs sm:text-sm text-rose-900 leading-relaxed">${explanationHtml}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('quiz-next-btn').classList.remove('hidden');
+    }
+
+    function nextQuizQuestion() {
+      currentExerciseIdx++;
+      if (currentExerciseIdx < filteredQuestions.length) {
+        renderExercise();
+      } else {
+        showQuizResults();
+      }
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-body').classList.add('hidden');
+      const comp = document.getElementById('quiz-completed');
+      comp.classList.remove('hidden');
+
+      const total = filteredQuestions.length;
+      let praise = "Gute Leistung!";
+      if (quizStars === total) {
+        praise = "Perfekt! Du bist ein echter Mathe-Meister! 🏆";
+      } else if (quizStars >= total * 0.7) {
+        praise = "Klasse gemacht! Du hast die Zusammenhänge sicher verstanden!";
+      }
+
+      document.getElementById('quiz-final-score-text').innerHTML = `
+        <strong>${praise}</strong><br>Du hast <strong>${quizStars} von ${total}</strong> Aufgaben dieser Kategorie erfolgreich gemeistert.
+      `;
+    }
+
+    function restartQuiz() {
+      currentExerciseIdx = 0;
+      quizStars = 0;
+      document.getElementById('quiz-body').classList.remove('hidden');
+      document.getElementById('quiz-completed').classList.add('hidden');
+      renderExercise();
+    }
+
+    /* ----------------------------------------------------
+       INITIALIZATION
+       ---------------------------------------------------- */
+    window.onload = function() {
+      updateAreaGrid();
+      updateVolumeScene();
+      renderUnitSteps();
+      populateConverterSelects();
+      calculateUnitConversion();
+      updateTankFromSlider();
+      renderExercise();
+    };
+
+    // Responsive Canvas Resizing on Window Resize
+    window.addEventListener('resize', () => {
+      const canvas = document.getElementById('canvas-isometric');
+      if (canvas && !document.getElementById('tab-volume').classList.contains('hidden')) {
+        updateVolumeScene(false);
+      }
+    });
+  </script>
+</body>
+</html>
